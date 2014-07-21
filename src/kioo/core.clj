@@ -3,9 +3,20 @@
   (:require [kioo.util :refer [convert-attrs flatten-nodes]]
             [net.cgrand.enlive-html :refer [at html-resource select
                                             any-node]]
-            [clojure.string :as string]))
+            [clojure.string :as string])
+  (:import (com.googlecode.htmlcompressor.compressor HtmlCompressor)
+           (java.io StringReader)))
 
 (declare compile component*)
+
+(def html-compressor (doto (new HtmlCompressor) (.setRemoveIntertagSpaces true)))
+
+(defn compressed-html-resource
+  "Runs resource through html-compressor before passing it to enlive html-resource."
+  [resource]
+  (let [raw-html-string (slurp (clojure.java.io/resource resource))]
+    (html-resource (StringReader. (.compress html-compressor raw-html-string)))))
+
 
 ;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
 ;; BASE REACT EMIT FUNCTIONS
@@ -99,7 +110,7 @@
   ([path trans emit-opts]
      (component* path [:body :> any-node] trans emit-opts))
   ([path sel trans emit-opts]
-      (let [root (html-resource path)
+      (let [root (compressed-html-resource path)
             start (if (= :root sel)
                     root
                     (select root (eval-selector sel)))
@@ -197,3 +208,4 @@
 ;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
 
 (def supress-whitespace {:emit-str #(when-not (empty? (string/trim %)) %)})
+(def suppress-whitespace {:emit-str #(when-not (empty? (string/trim %)) %)})

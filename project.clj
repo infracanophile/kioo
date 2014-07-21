@@ -1,4 +1,4 @@
-(defproject kioo "0.4.1-SNAPSHOT"
+(defproject kioo "0.4.1c"
   :description "enlive/enfocus style templating for Facebook's React."
   :url "http://github.com/ckirkendall/kioo"
   :author "Creighton Kirkendall"
@@ -8,6 +8,7 @@
             :url "http://www.eclipse.org/legal/epl-v10.html"}
   :dependencies [[enlive "1.1.5"]
                  [com.facebook/react "0.9.0.2"]
+                 [com.googlecode.htmlcompressor/htmlcompressor "1.4"]
                  [org.clojure/clojure "1.6.0"]
                  [org.clojure/clojurescript "0.0-2234"]
                  [sablono "0.2.6"]
